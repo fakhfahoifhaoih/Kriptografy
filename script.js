@@ -63,40 +63,70 @@ function decryptCaesar() {
     document.getElementById('caesarResult').value = caesarCipher(text, shift, true);
 }
 
-// Auto-Key Vigenère Cipher
-function encryptAutoKeyVigenere() {
-    const text = document.getElementById('autoKeyVigenereText').value;
-    const key = document.getElementById('autoKeyVigenereKey').value;
-    document.getElementById('autoKeyVigenereResult').value = autoKeyVigenere(text, key);
-}
-
-function decryptAutoKeyVigenere() {
-    const text = document.getElementById('autoKeyVigenereText').value;
-    const key = document.getElementById('autoKeyVigenereKey').value;
-    document.getElementById('autoKeyVigenereResult').value = autoKeyVigenere(text, key, true);
-}
-
+// Fungsi Auto-Key Vigenère Cipher
 function autoKeyVigenere(text, key, decrypt = false) {
-    let result = '';
-    let j = 0;
+    const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    text = text.toUpperCase().replace(/[^A-Z]/g, ""); // Bersihkan teks dari karakter non-alfabet
+    key = key.toUpperCase().replace(/[^A-Z]/g, ""); // Bersihkan kunci dari karakter non-alfabet
+
+    let result = "";
     let autoKey = key;
-    for (let i = 0; i < text.length; i++) {
-        const char = text[i];
-        if (/[A-Za-z]/.test(char)) {
-            const isUpper = char === char.toUpperCase();
-            const base = isUpper ? 'A'.charCodeAt(0) : 'a'.charCodeAt(0);
-            const textChar = char.charCodeAt(0) - base;
-            const keyChar = autoKey[j % autoKey.length].toUpperCase().charCodeAt(0) - 'A'.charCodeAt(0);
-            const shift = decrypt ? (textChar - keyChar + 26) % 26 : (textChar + keyChar) % 26;
-            result += String.fromCharCode(shift + base);
-            j++;
-            if (j < text.length) autoKey += text[j]; // Update auto-key
-        } else {
-            result += char;
+
+    if (decrypt) {
+        // Proses dekripsi
+        for (let i = 0; i < text.length; i++) {
+            const textCharIndex = alphabet.indexOf(text[i]);
+            const keyCharIndex = alphabet.indexOf(autoKey[i]);
+
+            if (textCharIndex === -1 || keyCharIndex === -1) {
+                result += text[i]; // Tambahkan karakter non-alfabet langsung ke hasil
+            } else {
+                const decryptedIndex = (textCharIndex - keyCharIndex + 26) % 26;
+                const decryptedChar = alphabet[decryptedIndex];
+                result += decryptedChar;
+
+                // Tambahkan karakter hasil dekripsi ke kunci otomatis
+                autoKey += decryptedChar;
+            }
+        }
+    } else {
+        // Proses enkripsi
+        for (let i = 0; i < text.length; i++) {
+            const textCharIndex = alphabet.indexOf(text[i]);
+            const keyCharIndex = alphabet.indexOf(autoKey[i]);
+
+            if (textCharIndex === -1 || keyCharIndex === -1) {
+                result += text[i]; // Tambahkan karakter non-alfabet langsung ke hasil
+            } else {
+                const encryptedIndex = (textCharIndex + keyCharIndex) % 26;
+                const encryptedChar = alphabet[encryptedIndex];
+                result += encryptedChar;
+
+                // Tambahkan karakter teks asli ke kunci otomatis
+                autoKey += text[i];
+            }
         }
     }
+
     return result;
 }
+
+// Fungsi untuk mengenkripsi menggunakan Auto-Key Vigenère Cipher
+function encryptAutoKeyVigenere() {
+    const text = document.getElementById("autoKeyVigenereText").value;
+    const key = document.getElementById("autoKeyVigenereKey").value;
+    const encryptedText = autoKeyVigenere(text, key);
+    document.getElementById("autoKeyVigenereResult").value = encryptedText;
+}
+
+// Fungsi untuk mendekripsi menggunakan Auto-Key Vigenère Cipher
+function decryptAutoKeyVigenere() {
+    const text = document.getElementById("autoKeyVigenereText").value;
+    const key = document.getElementById("autoKeyVigenereKey").value;
+    const decryptedText = autoKeyVigenere(text, key, true);
+    document.getElementById("autoKeyVigenereResult").value = decryptedText;
+}
+
 
 // Extended Vigenère Cipher (256 characters ASCII)
 function encryptExtendedVigenere() {
@@ -127,14 +157,122 @@ function extendedVigenere(text, key, decrypt = false) {
 }
 
 
-// Playfair Cipher (Placeholder)
-function encryptPlayfair() {
-    document.getElementById('playfairResult').value = "Playfair enkripsi tidak tersedia";
+// Membuat matriks kunci untuk Playfair Cipher
+function createPlayfairMatrix(key) {
+    const matrix = [];
+    const alphabet = "ABCDEFGHIKLMNOPQRSTUVWXYZ"; // Menggunakan 'I' untuk menggantikan 'J'
+    let keySet = new Set();
+
+    // Menghilangkan duplikasi dan mengganti 'J' dengan 'I'
+    key = key.toUpperCase().replace(/J/g, "I").replace(/[^A-Z]/g, "");
+
+    // Menambahkan karakter dari kunci ke dalam matriks
+    for (let char of key) {
+        keySet.add(char);
+    }
+
+    // Menambahkan huruf dari alfabet yang belum ada dalam kunci
+    for (let char of alphabet) {
+        if (!keySet.has(char)) {
+            keySet.add(char);
+        }
+    }
+
+    // Mengonversi keySet menjadi array dan membaginya ke dalam 5x5 matriks
+    const matrixArray = Array.from(keySet);
+    for (let i = 0; i < 5; i++) {
+        matrix.push(matrixArray.slice(i * 5, i * 5 + 5));
+    }
+
+    return matrix;
 }
 
-function decryptPlayfair() {
-    document.getElementById('playfairResult').value = "Playfair dekripsi tidak tersedia";
+// Mendapatkan posisi huruf dalam matriks
+function getPosition(matrix, char) {
+    for (let row = 0; row < matrix.length; row++) {
+        const col = matrix[row].indexOf(char);
+        if (col !== -1) return { row, col };
+    }
+    return null;
 }
+
+// Fungsi untuk mengenkripsi teks dengan Playfair Cipher
+function encryptPlayfair() {
+    const text = document.getElementById("playfairText").value.toUpperCase().replace(/J/g, "I").replace(/[^A-Z]/g, "");
+    const key = document.getElementById("playfairKey").value;
+    const matrix = createPlayfairMatrix(key);
+
+    let result = "";
+    let i = 0;
+
+    // Memproses pasangan huruf
+    while (i < text.length) {
+        let a = text[i];
+        let b = text[i + 1] || "X"; // Jika huruf kedua tidak ada, isi dengan 'X'
+        
+        if (a === b) b = "X"; // Ganti pasangan huruf yang sama dengan 'X'
+
+        const posA = getPosition(matrix, a);
+        const posB = getPosition(matrix, b);
+
+        if (posA.row === posB.row) {
+            // Jika berada di baris yang sama, geser ke kanan
+            result += matrix[posA.row][(posA.col + 1) % 5];
+            result += matrix[posB.row][(posB.col + 1) % 5];
+        } else if (posA.col === posB.col) {
+            // Jika berada di kolom yang sama, geser ke bawah
+            result += matrix[(posA.row + 1) % 5][posA.col];
+            result += matrix[(posB.row + 1) % 5][posB.col];
+        } else {
+            // Jika berbentuk persegi panjang, tukar kolom
+            result += matrix[posA.row][posB.col];
+            result += matrix[posB.row][posA.col];
+        }
+
+        i += 2; // Lanjutkan ke pasangan berikutnya
+    }
+
+    document.getElementById("playfairResult").value = result;
+}
+
+// Fungsi untuk mendekripsi teks dengan Playfair Cipher
+function decryptPlayfair() {
+    const text = document.getElementById("playfairText").value.toUpperCase().replace(/J/g, "I").replace(/[^A-Z]/g, "");
+    const key = document.getElementById("playfairKey").value;
+    const matrix = createPlayfairMatrix(key);
+
+    let result = "";
+    let i = 0;
+
+    // Memproses pasangan huruf
+    while (i < text.length) {
+        let a = text[i];
+        let b = text[i + 1] || "X"; // Jika huruf kedua tidak ada, isi dengan 'X'
+
+        const posA = getPosition(matrix, a);
+        const posB = getPosition(matrix, b);
+
+        if (posA.row === posB.row) {
+            // Jika berada di baris yang sama, geser ke kiri
+            result += matrix[posA.row][(posA.col + 4) % 5];
+            result += matrix[posB.row][(posB.col + 4) % 5];
+        } else if (posA.col === posB.col) {
+            // Jika berada di kolom yang sama, geser ke atas
+            result += matrix[(posA.row + 4) % 5][posA.col];
+            result += matrix[(posB.row + 4) % 5][posB.col];
+        } else {
+            // Jika berbentuk persegi panjang, tukar kolom
+            result += matrix[posA.row][posB.col];
+            result += matrix[posB.row][posA.col];
+        }
+
+        i += 2; // Lanjutkan ke pasangan berikutnya
+    }
+
+    document.getElementById("playfairResult").value = result;
+}
+
+
 
 // Fungsi untuk menampilkan bagian (section) yang dipilih dan menambahkan URL ke riwayat browser
 function showSection(sectionId) {
@@ -152,64 +290,84 @@ function showSection(sectionId) {
     history.pushState({ section: sectionId }, "", `#${sectionId}`);
 }
 
-// Affine Cipher
-function encryptAffine() {
-    const text = document.getElementById('affineText').value.toUpperCase();
-    const a = parseInt(document.getElementById('affineA').value);
-    const b = parseInt(document.getElementById('affineB').value);
-    document.getElementById('affineResult').value = affineEncrypt(text, a, b);
-}
-
-function decryptAffine() {
-    const text = document.getElementById('affineText').value.toUpperCase();
-    const a = parseInt(document.getElementById('affineA').value);
-    const b = parseInt(document.getElementById('affineB').value);
-    document.getElementById('affineResult').value = affineDecrypt(text, a, b);
-}
-
-function affineEncrypt(text, a, b) {
-    let result = '';
-    for (let i = 0; i < text.length; i++) {
-        const char = text[i];
-        if (/[A-Z]/.test(char)) {
-            const x = char.charCodeAt(0) - 'A'.charCodeAt(0);
-            const encryptedChar = (a * x + b) % 26;
-            result += String.fromCharCode(encryptedChar + 'A'.charCodeAt(0));
-        } else {
-            result += char;
-        }
-    }
-    return result;
-}
-
-function affineDecrypt(text, a, b) {
-    let result = '';
-    const modInverse = modInverse(a, 26);
-    if (modInverse === -1) {
-        return "Invalid 'a' value, no inverse exists.";
-    }
-    for (let i = 0; i < text.length; i++) {
-        const char = text[i];
-        if (/[A-Z]/.test(char)) {
-            const y = char.charCodeAt(0) - 'A'.charCodeAt(0);
-            const decryptedChar = (modInverse * (y - b + 26)) % 26;
-            result += String.fromCharCode(decryptedChar + 'A'.charCodeAt(0));
-        } else {
-            result += char;
-        }
-    }
-    return result;
-}
-
-// Function to find modular inverse
+// Fungsi untuk mencari invers modulo 26
 function modInverse(a, m) {
+    a = a % m;
     for (let x = 1; x < m; x++) {
         if ((a * x) % m === 1) {
             return x;
         }
     }
-    return -1;
+    return -1; // Tidak ada invers jika tidak ditemukan
 }
+
+// Fungsi enkripsi Affine Cipher
+function affineEncrypt(text, a, b) {
+    let result = '';
+    for (let i = 0; i < text.length; i++) {
+        const char = text[i].toUpperCase();
+        if (/[A-Z]/.test(char)) {
+            const x = char.charCodeAt(0) - 'A'.charCodeAt(0);
+            const encryptedChar = (a * x + b) % 26;
+            result += String.fromCharCode(encryptedChar + 'A'.charCodeAt(0));
+        } else {
+            result += char; // Jika bukan huruf, langsung masukkan
+        }
+    }
+    return result;
+}
+
+// Fungsi dekripsi Affine Cipher
+function affineDecrypt(text, a, b) {
+    let result = '';
+    const modInvA = modInverse(a, 26); // Cari invers a modulo 26
+    if (modInvA === -1) {
+        return "Tidak ada invers untuk nilai 'a'. Dekripsi tidak bisa dilakukan.";
+    }
+
+    for (let i = 0; i < text.length; i++) {
+        const char = text[i].toUpperCase();
+        if (/[A-Z]/.test(char)) {
+            const y = char.charCodeAt(0) - 'A'.charCodeAt(0);
+            const decryptedChar = (modInvA * (y - b + 26)) % 26; // Proses dekripsi
+            result += String.fromCharCode(decryptedChar + 'A'.charCodeAt(0));
+        } else {
+            result += char; // Jika bukan huruf, langsung masukkan
+        }
+    }
+    return result;
+}
+
+// Fungsi untuk mengenkripsi Affine Cipher
+function encryptAffine() {
+    const text = document.getElementById('affineText').value;
+    const a = parseInt(document.getElementById('affineA').value);
+    const b = parseInt(document.getElementById('affineB').value);
+    
+    // Pastikan 'a' dan 'b' adalah angka valid
+    if (isNaN(a) || isNaN(b)) {
+        alert("Kunci a dan b harus berupa angka.");
+        return;
+    }
+
+    document.getElementById('affineResult').value = affineEncrypt(text, a, b);
+}
+
+// Fungsi untuk mendekripsi Affine Cipher
+function decryptAffine() {
+    const text = document.getElementById('affineText').value;
+    const a = parseInt(document.getElementById('affineA').value);
+    const b = parseInt(document.getElementById('affineB').value);
+
+    // Pastikan 'a' dan 'b' adalah angka valid
+    if (isNaN(a) || isNaN(b)) {
+        alert("Kunci a dan b harus berupa angka.");
+        return;
+    }
+
+    document.getElementById('affineResult').value = affineDecrypt(text, a, b);
+}
+
 
 function encryptHill() {
     const text = document.getElementById('hillText').value.toUpperCase();
@@ -331,22 +489,23 @@ function modInverseAffine(a) {
 }
 
 
-// Super Encryption (Extended Vigenère + Columnar Transposition)
-function encryptSuper() {
-    const text = document.getElementById('superEncryptionText').value;
-    const key = document.getElementById('superEncryptionKey').value;
-    const step1 = extendedVigenere(text, key); // Step 1: Encrypt using Extended Vigenère
-    document.getElementById('superEncryptionResult').value = columnarTranspositionEncrypt(step1, key); // Step 2: Columnar Transposition
-}
+// Extended Vigenère Cipher (untuk karakter ASCII)
+function extendedVigenere(text, key, decrypt = false) {
+    const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    let result = "";
+    let j = 0;
 
-function decryptSuper() {
-    const text = document.getElementById('superEncryptionText').value;
-    const key = document.getElementById('superEncryptionKey').value;
-    const step1 = columnarTranspositionDecrypt(text, key); // Step 1: Decrypt using Columnar Transposition
-    document.getElementById('superEncryptionResult').value = extendedVigenere(step1, key, true); // Step 2: Decrypt using Extended Vigenère
-}
+    for (let i = 0; i < text.length; i++) {
+        let charCode = text.charCodeAt(i);
+        let keyChar = key.charCodeAt(j % key.length);
+        let shift = decrypt ? (charCode - keyChar + 256) % 256 : (charCode + keyChar) % 256;
+        result += String.fromCharCode(shift);
+        j++;
+    }
 
-// Columnar Transposition Cipher
+    return result;
+}
+// Columnar Transposition Cipher (untuk enkripsi)
 function columnarTranspositionEncrypt(text, key) {
     const numCols = key.length;
     const numRows = Math.ceil(text.length / numCols);
@@ -362,22 +521,24 @@ function columnarTranspositionEncrypt(text, key) {
     }
 
     let result = '';
-    for (let i = 0; i < key.length; i++) {
+    for (let i = 0; i < numCols; i++) {
         const col = key.indexOf(key[i]);
         for (let row = 0; row < numRows; row++) {
             result += grid[row][col];
         }
     }
+
     return result;
 }
 
+// Columnar Transposition Cipher (untuk dekripsi)
 function columnarTranspositionDecrypt(text, key) {
     const numCols = key.length;
     const numRows = Math.ceil(text.length / numCols);
     const grid = Array.from({ length: numRows }, () => Array(numCols).fill(' '));
 
     let idx = 0;
-    for (let i = 0; i < key.length; i++) {
+    for (let i = 0; i < numCols; i++) {
         const col = key.indexOf(key[i]);
         for (let row = 0; row < numRows; row++) {
             if (idx < text.length) {
@@ -392,7 +553,37 @@ function columnarTranspositionDecrypt(text, key) {
             result += grid[row][col];
         }
     }
+
     return result;
+}
+// Super Encryption (gabungkan Extended Vigenère dan Columnar Transposition)
+function encryptSuper() {
+    const text = document.getElementById("superEncryptionText").value;
+    const key = document.getElementById("superEncryptionKey").value;
+
+    // Langkah 1: Enkripsi menggunakan Extended Vigenère Cipher
+    const vigenereEncrypted = extendedVigenere(text, key);
+
+    // Langkah 2: Enkripsi menggunakan Columnar Transposition Cipher
+    const superEncrypted = columnarTranspositionEncrypt(vigenereEncrypted, key);
+
+    // Tampilkan hasil
+    document.getElementById("superEncryptionResult").value = superEncrypted;
+}
+
+// Super Encryption (dekripsi dengan urutan kebalikan)
+function decryptSuper() {
+    const text = document.getElementById("superEncryptionText").value;
+    const key = document.getElementById("superEncryptionKey").value;
+
+    // Langkah 1: Dekripsi menggunakan Columnar Transposition Cipher
+    const transpositionDecrypted = columnarTranspositionDecrypt(text, key);
+
+    // Langkah 2: Dekripsi menggunakan Extended Vigenère Cipher
+    const superDecrypted = extendedVigenere(transpositionDecrypted, key, true);
+
+    // Tampilkan hasil
+    document.getElementById("superEncryptionResult").value = superDecrypted;
 }
 
 

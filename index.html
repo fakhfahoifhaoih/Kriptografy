@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kritograpy</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <a href="#home" onclick="showSection('home')" class="header-link">Kritograpy</a>
+    </header>
+    
+
+    <!-- Main Content -->
+    <main>
+        <!-- Home Section with Cipher Options -->
+        <section id="home" class="content active">
+            <h2>Halo..</h2>
+            <p>Selamat datang di Kritograpy! Pilih salah satu metode cipher di bawah ini untuk memulai enkripsi atau dekripsi.</p>
+            <div class="cipher-options">
+                <div class="cipher-option" onclick="showSection('vigenere')">
+                    <h3>Vigenère Cipher</h3>
+                </div>
+                <div class="cipher-option" onclick="showSection('playfair')">
+                    <h3>Playfair Cipher</h3>
+                </div>
+                <div class="cipher-option" onclick="showSection('caesar')">
+                    <h3>Caesar Cipher</h3>
+                </div>
+                <div class="cipher-option" onclick="showSection('vigeautoKeyVigenerenere')">
+                    <h3>autoKeyVigenere</h3>
+                </div>
+                <div class="cipher-option" onclick="showSection('extendedVigenere')">
+                    <h3>extendedVigenere</h3>
+                </div>
+                <div class="cipher-option" onclick="showSection('affine')">
+                    <h3>affine</h3>
+                </div>
+                <div class="cipher-option" onclick="showSection('hill')">
+                    <h3>hill</h3>
+                </div>
+                <div class="cipher-option" onclick="showSection('superEncryption')">
+                    <h3>superEncryption</h3>
+                </div>
+            </div>
+        </section>
+
+        <!-- Vigenere Cipher Section -->
+        <section id="vigenere" class="content">
+            <h2>Vigenère Cipher</h2>
+            <p>Enkripsi dan Dekripsi dengan Vigenère Cipher.</p>
+            <label>Masukkan Teks:</label>
+            <textarea id="vigenereText" rows="4"></textarea>
+            <label>Masukkan Kunci:</label>
+            <input type="text" id="vigenereKey">
+            <button onclick="encryptVigenere()">Enkripsi</button>
+            <button onclick="decryptVigenere()">Dekripsi</button>
+            <h3>Hasil:</h3>
+            <textarea id="vigenereResult" rows="4" readonly></textarea>
+            <button class="back-button" onclick="showSection('home')">Kembali ke Home</button>
+        </section>
+
+        <!-- Playfair Cipher Section -->
+        <section id="playfair" class="content">
+            <h2>Playfair Cipher</h2>
+            <p>Enkripsi dan Dekripsi dengan Playfair Cipher.</p>
+            <label>Masukkan Teks:</label>
+            <textarea id="playfairText" rows="4"></textarea>
+            <label>Masukkan Kunci:</label>
+            <input type="text" id="playfairKey">
+            <button onclick="encryptPlayfair()">Enkripsi</button>
+            <button onclick="decryptPlayfair()">Dekripsi</button>
+            <h3>Hasil:</h3>
+            <textarea id="playfairResult" rows="4" readonly></textarea>
+            <button class="back-button" onclick="showSection('home')">Kembali ke Home</button>
+        </section>
+
+        <!-- Caesar Cipher Section -->
+        <section id="caesar" class="content">
+            <h2>Caesar Cipher</h2>
+            <p>Enkripsi dan Dekripsi dengan Caesar Cipher.</p>
+            <label>Masukkan Teks:</label>
+            <textarea id="caesarText" rows="4"></textarea>
+            <label>Masukkan Shift (0-25):</label>
+            <input type="number" id="caesarShift" min="0" max="25">
+            <button onclick="encryptCaesar()">Enkripsi</button>
+            <button onclick="decryptCaesar()">Dekripsi</button>
+            <h3>Hasil:</h3>
+            <textarea id="caesarResult" rows="4" readonly></textarea>
+            <button class="back-button" onclick="showSection('home')">Kembali ke Home</button>
+        </section>
+        <!-- Auto-Key Vigenère Cipher Section -->
+<section id="autoKeyVigenere" class="content">
+    <h2>Auto-Key Vigenère Cipher</h2>
+    <p>Enkripsi dan Dekripsi dengan Auto-Key Vigenère Cipher.</p>
+    <label>Masukkan Teks:</label>
+    <textarea id="autoKeyVigenereText" rows="4"></textarea>
+    <label>Masukkan Kunci:</label>
+    <input type="text" id="autoKeyVigenereKey">
+    <button onclick="encryptAutoKeyVigenere()">Enkripsi</button>
+    <button onclick="decryptAutoKeyVigenere()">Dekripsi</button>
+    <h3>Hasil:</h3>
+    <textarea id="autoKeyVigenereResult" rows="4" readonly></textarea>
+    <button class="back-button" onclick="showSection('home')">Kembali ke Home</button>
+</section>
+
+<!-- Extended Vigenère Cipher Section -->
+<section id="extendedVigenere" class="content">
+    <h2>Extended Vigenère Cipher</h2>
+    <p>Enkripsi dan Dekripsi dengan Extended Vigenère Cipher (256 karakter ASCII).</p>
+    <label>Masukkan Teks:</label>
+    <textarea id="extendedVigenereText" rows="4"></textarea>
+    <label>Masukkan Kunci:</label>
+    <input type="text" id="extendedVigenereKey">
+    <button onclick="encryptExtendedVigenere()">Enkripsi</button>
+    <button onclick="decryptExtendedVigenere()">Dekripsi</button>
+    <h3>Hasil:</h3>
+    <textarea id="extendedVigenereResult" rows="4" readonly></textarea>
+    <button class="back-button" onclick="showSection('home')">Kembali ke Home</button>
+</section>
+
+<!-- Playfair Cipher Section -->
+<section id="playfair" class="content">
+    <h2>Playfair Cipher</h2>
+    <p>Enkripsi dan Dekripsi dengan Playfair Cipher.</p>
+    <label>Masukkan Teks:</label>
+    <textarea id="playfairText" rows="4"></textarea>
+    <label>Masukkan Kunci:</label>
+    <input type="text" id="playfairKey">
+    <button onclick="encryptPlayfair()">Enkripsi</button>
+    <button onclick="decryptPlayfair()">Dekripsi</button>
+    <h3>Hasil:</h3>
+    <textarea id="playfairResult" rows="4" readonly></textarea>
+    <button class="back-button" onclick="showSection('home')">Kembali ke Home</button>
+</section>
+
+<!-- Affine Cipher Section -->
+<section id="affine" class="content">
+    <h2>Affine Cipher</h2>
+    <p>Enkripsi dan Dekripsi dengan Affine Cipher.</p>
+    <label>Masukkan Teks:</label>
+    <textarea id="affineText" rows="4"></textarea>
+    <label>Masukkan Kunci (a, b):</label>
+    <input type="number" id="affineA">
+    <input type="number" id="affineB">
+    <button onclick="encryptAffine()">Enkripsi</button>
+    <button onclick="decryptAffine()">Dekripsi</button>
+    <h3>Hasil:</h3>
+    <textarea id="affineResult" rows="4" readonly></textarea>
+    <button class="back-button" onclick="showSection('home')">Kembali ke Home</button>
+</section>
+
+<!-- Hill Cipher Section -->
+<section id="hill" class="content">
+    <h2>Hill Cipher</h2>
+    <p>Enkripsi dan Dekripsi dengan Hill Cipher.</p>
+    <label>Masukkan Teks:</label>
+    <textarea id="hillText" rows="4"></textarea>
+    <label>Masukkan Matriks Kunci (2x2):</label>
+    <input type="text" id="hillMatrix" placeholder="Format: a b, c d">
+    <button onclick="encryptHill()">Enkripsi</button>
+    <button onclick="decryptHill()">Dekripsi</button>
+    <h3>Hasil:</h3>
+    <textarea id="hillResult" rows="4" readonly></textarea>
+    <button class="back-button" onclick="showSection('home')">Kembali ke Home</button>
+</section>
+
+<!-- Super Encryption Section -->
+<section id="superEncryption" class="content">
+    <h2>Super Encryption</h2>
+    <p>Gabungan Extended Vigenère Cipher dan Kolom Transposisi.</p>
+    <label>Masukkan Teks:</label>
+    <textarea id="superEncryptionText" rows="4"></textarea>
+    <label>Masukkan Kunci:</label>
+    <input type="text" id="superEncryptionKey">
+    <button onclick="encryptSuper()">Enkripsi</button>
+    <button onclick="decryptSuper()">Dekripsi</button>
+    <h3>Hasil:</h3>
+    <textarea id="superEncryptionResult" rows="4" readonly></textarea>
+    <button class="back-button" onclick="showSection('home')">Kembali ke Home</button>
+</section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        Ivan Jacobus Hutauruk
+        <span>222350087</span>
+    </footer>
+    
+
+    <!-- JavaScript -->
+    <script src="script.js"></script>
+</body>
+</html>

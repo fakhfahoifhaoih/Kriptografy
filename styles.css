@@ -1,0 +1,207 @@
+/* Global Styles */
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  min-height: 90vh;
+  background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
+}
+
+/* Header */
+header {
+  font-size: 10em; /* Perbesar ukuran teks header */
+  font-weight: bold;
+  text-align: center;
+  padding: 20px 0; /* Tambahkan padding untuk jarak lebih */
+  color: white; /* Warna teks header */
+  background-color: #4CAF50; /* Warna latar belakang header */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Tambahkan bayangan untuk efek elevasi */
+  transition: background-color 0.3s;
+}
+
+.header-link {
+  text-decoration: none;
+  color: inherit;
+}
+x   
+.header-link {
+  text-decoration: none; /* Menghilangkan garis bawah */
+  color: inherit; /* Mengikuti warna teks header */
+  font-weight: bold; /* Memperjelas teks */
+  cursor: pointer; /* Menampilkan kursor pointer saat dihover */
+}
+
+.header-link:hover {
+  color: #444; /* Warna teks sedikit lebih gelap saat dihover */
+}
+
+
+/* Main Content */
+main {
+  flex: 1;
+  padding: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+/* Home Section Styles */
+.cipher-options {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  margin-top: 20px;
+  text-align: center;
+}
+.cipher-option {
+  background-color: #4CAF50;
+  color: white;
+  padding: 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: transform 0.3s, box-shadow 0.3s;
+  width: 150px;
+  text-align: center;
+  font-size: 1.1em;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+}
+.cipher-option:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 12px rgba(0, 0, 0, 0.3);
+}
+
+/* Content Sections */
+.content {
+  display: none;
+  width: 100%;
+  max-width: 600px;
+  text-align: center;
+  background-color: #ffffff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  animation: fadeIn 0.5s ease-in-out;
+}
+.content.active {
+  display: block;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+      opacity: 0;
+      transform: translateY(20px);
+  }
+  to {
+      opacity: 1;
+      transform: translateY(0);
+  }
+}
+
+/* Input Styles */
+textarea, input {
+  width: 100%;
+  margin: 10px 0;
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  font-size: 16px;
+  box-sizing: border-box;
+}
+button {
+  margin: 5px;
+  padding: 10px 20px;
+  border: none;
+  background-color: #4CAF50;
+  color: white;
+  cursor: pointer;
+  border-radius: 5px;
+  transition: background-color 0.3s;
+}
+button:hover {
+  background-color: #45a049;
+}
+
+/* Back Button */
+.back-button {
+  background-color: #d9534f;
+  transition: background-color 0.3s;
+}
+.back-button:hover {
+  background-color: #c9302c;
+}
+
+
+
+/* Sticky Footer */
+footer {
+  position: fixed;
+  left: 10px; /* Agar footer menempel di sisi kiri */
+  bottom: 10px; /* Mengatur jarak dari bawah */
+  font-size: 14px; /* Ukuran font yang lebih kecil */
+  text-align: left; /* Menyelaraskan teks ke kiri */
+  line-height: 1.2; /* Mengatur jarak antar baris */
+  color: #555; /* Warna teks yang lebih halus */
+}
+
+footer span {
+  display: block;
+  font-size: 12px; /* Ukuran font untuk nomor lebih kecil */
+  color: #777; /* Warna yang lebih lembut untuk nomor */
+}
+
+
+/* Responsive */
+/*@media (max-width: 600px) {
+  .cipher-options {
+      flex-direction: column;
+      gap: 15px;
+  }
+}*/
+/* Menu */
+.menu {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  margin: 20px 0;
+  flex-wrap: wrap;
+}
+
+.menu a {
+  padding: 10px 20px;
+  background-color: #4a90e2;
+  color: #fff;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: bold;
+  transition: background-color 0.3s;
+  text-align: center;
+  flex-grow: 1;
+}
+
+/* Responsif untuk layar kecil */
+@media (max-width: 768px) {
+  header {
+      font-size: 1.5em;
+      padding: 15px;
+  }
+
+  .menu {
+      flex-direction: column; /* Tampilkan menu secara vertikal pada layar kecil */
+      align-items: center;    /* Pastikan menu tetap berada di tengah */
+  }
+
+  .menu a {
+      width: 80%; /* Sesuaikan lebar tombol menu untuk tampilan yang lebih baik pada layar kecil */
+      margin-bottom: 10px; /* Tambahkan jarak antar menu */
+  }
+
+  .content {
+      width: 90%;
+  }
+}

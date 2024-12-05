@@ -1,4 +1,4 @@
-/* Global Styles */
+Global Styles
 body {
   font-family: Arial, sans-serif;
   margin: 0;
@@ -11,7 +11,7 @@ body {
 
 /* Header */
 header {
-  font-size: 10em; /* Perbesar ukuran teks header */
+  font-size: 8em; /* Perbesar ukuran teks header */
   font-weight: bold;
   text-align: center;
   padding: 20px 0; /* Tambahkan padding untuk jarak lebih */
@@ -50,14 +50,13 @@ main {
 
 /* Home Section Styles */
 .cipher-options {
-  display: flex;
-  justify-content: center;
-  flex-direction: column;
-  align-items: center;
-  gap: 20px;
-  margin-top: 20px;
-  text-align: center;
+  display: grid; /* Gunakan CSS Grid */
+  grid-template-columns: repeat(3, 1fr); /* 4 kolom dengan lebar sama */
+  gap: 20px; /* Jarak antar elemen */
+  justify-items: center; /* Pusatkan elemen secara horizontal */
+  margin: 20px 0; /* Jarak atas dan bawah */
 }
+
 .cipher-option {
   background-color: #4CAF50;
   color: white;
